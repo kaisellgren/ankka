@@ -57,7 +57,7 @@ executable ankka
   -- other-extensions:    
   
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.7, GLUT
+  build-depends:       base >= 4.7, GLFW-b >= 1.4, OpenGL >= 2.9
   
   -- Directories containing source files.
   hs-source-dirs:      src
