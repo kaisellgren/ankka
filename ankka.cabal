@@ -13,7 +13,7 @@ name:                ankka
 version:             0.1.0.0
 
 -- A short (one-line) description of the package.
-synopsis:            A game
+synopsis:            An RTS game set around in the world of unknown
 
 -- A longer description of the package.
 -- description:         
@@ -25,7 +25,7 @@ license:             MIT
 license-file:        LICENSE
 
 -- The package author(s).
-author:              Kai Sellgren
+author:              Kai Sellgren, Marko Aalto, Miko Kiiski
 
 -- An email address to which users can send suggestions, bug reports, and 
 -- patches.
