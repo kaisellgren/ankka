@@ -2,6 +2,7 @@
 
 ## Setting up the game
 
+- `sudo apt-get install libglu1-mesa-dev libxrandr-dev libxcursor-dev libxinerama-dev libxi-dev mesa-common-dev libx11-dev libgl1-mesa-dev`
 - git clone
 - Install the Haskell platform along with the cabal package manager
 - cabal update (just to make sure you have the latest package information)
