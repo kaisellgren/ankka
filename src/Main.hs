@@ -5,8 +5,8 @@ import Event
 import Callbacks
 
 import Control.Concurrent.STM
-import Control.Monad             (unless, when, void)
-import Control.Monad.RWS.Strict  (RWST, ask, asks, evalRWST, get, liftIO, modify, put)
+import Control.Monad             (unless, void)
+import Control.Monad.RWS.Strict  (RWST, asks, evalRWST, get, liftIO)
 
 import qualified Graphics.Rendering.OpenGL as GL
 import qualified Graphics.UI.GLFW as GLFW
@@ -127,12 +127,10 @@ adjustWindow = do
 
 draw :: S ()
 draw = do
-    env   <- ask
     state <- get
     let xa = stateXAngle state
         ya = stateYAngle state
         za = stateZAngle state
-        ga = stateGearZAngle  state
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         GL.preservingMatrix $ do
@@ -143,7 +141,3 @@ draw = do
         xunit = GL.Vector3 1 0 0 :: GL.Vector3 GL.GLfloat
         yunit = GL.Vector3 0 1 0 :: GL.Vector3 GL.GLfloat
         zunit = GL.Vector3 0 0 1 :: GL.Vector3 GL.GLfloat
-
-printEvent :: String -> [String] -> S ()
-printEvent cbname fields =
-    liftIO $ putStrLn $ cbname ++ ": " ++ unwords fields

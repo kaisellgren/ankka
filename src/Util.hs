@@ -2,7 +2,6 @@ module Util where
 
 import qualified Graphics.UI.GLFW as GLFW
 import Control.Monad
-import Control.Monad.RWS.Strict
 import Data.Maybe
 
 withWindow :: Int -> Int -> String -> (GLFW.Window -> IO ()) -> IO ()
