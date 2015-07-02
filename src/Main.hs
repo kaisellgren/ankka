@@ -47,13 +47,7 @@ initialize :: TQueue Event -> GLFW.Window -> IO ()
 initialize eventChannel win = do
     GLFW.swapInterval 1
 
-    GL.position (GL.Light 0) GL.$= GL.Vertex4 5 5 10 0
-    GL.light    (GL.Light 0) GL.$= GL.Enabled
-    GL.lighting   GL.$= GL.Enabled
-    GL.cullFace   GL.$= Just GL.Back
-    GL.depthFunc  GL.$= Just GL.Less
     GL.clearColor GL.$= GL.Color4 0.05 0.05 0.05 1
-    GL.normalize  GL.$= GL.Enabled
 
     (fbWidth, fbHeight) <- GLFW.getFramebufferSize win
 
