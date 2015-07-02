@@ -125,13 +125,14 @@ draw = do
     let xa = stateXAngle state
         ya = stateYAngle state
         za = stateZAngle state
+        color = GL.Color3 1 0 0 :: GL.Color3 GL.GLfloat
+        points = [(-0.6, -0.4), (0.6, -0.4), (0, 0.6)]
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
-        GL.preservingMatrix $ do
-            GL.rotate (realToFrac xa) xunit
-            GL.rotate (realToFrac ya) yunit
-            GL.rotate (realToFrac za) zunit
-      where
-        xunit = GL.Vector3 1 0 0 :: GL.Vector3 GL.GLfloat
-        yunit = GL.Vector3 0 1 0 :: GL.Vector3 GL.GLfloat
-        zunit = GL.Vector3 0 0 1 :: GL.Vector3 GL.GLfloat
+        GL.color color
+        GL.renderPrimitive GL.Triangles $ do
+          GL.vertex $ vertex $ points !! 0
+          GL.vertex $ vertex $ points !! 1
+          GL.vertex $ vertex $ points !! 2
+        where
+          vertex (x, y) = GL.Vertex2 x y :: GL.Vertex2 GL.GLfloat
