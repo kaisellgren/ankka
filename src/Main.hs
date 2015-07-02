@@ -3,6 +3,7 @@ module Main where
 import Util
 import Event
 import Callbacks
+import Math
 
 import Control.Concurrent.STM
 import Control.Monad             (unless, void)
@@ -126,13 +127,18 @@ draw = do
         ya = stateYAngle state
         za = stateZAngle state
         color = GL.Color3 1 0 0 :: GL.Color3 GL.GLfloat
-        points = [(-0.6, -0.4), (0.6, -0.4), (0, 0.6)]
+        points = [(-0.6, -0.4), (0.6, -0.4), (0, 0.6)] :: [Vector2]
+        fps = 60
+        dt = 1 / fps
+        v = (4, 2) -- Speed vector in seconds
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         GL.color color
+        GL.translate $ vector3 (vscale v dt)
         GL.renderPrimitive GL.Triangles $ do
-          GL.vertex $ vertex $ points !! 0
-          GL.vertex $ vertex $ points !! 1
-          GL.vertex $ vertex $ points !! 2
+          GL.vertex $ vertex2 $ points !! 0
+          GL.vertex $ vertex2 $ points !! 1
+          GL.vertex $ vertex2 $ points !! 2
         where
-          vertex (x, y) = GL.Vertex2 x y :: GL.Vertex2 GL.GLfloat
+          vertex2 (x, y) = GL.Vertex2 (realToFrac x) (realToFrac y) :: GL.Vertex2 GL.GLfloat
+          vector3 (x, y) = GL.Vector3 (realToFrac x) (realToFrac y) 0 :: GL.Vector3 GL.GLfloat

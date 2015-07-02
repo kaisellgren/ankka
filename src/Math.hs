@@ -1,3 +1,5 @@
+module Math where
+
 type Vector2 = (Float, Float)
 
 fromAngle :: Float -> Vector2
