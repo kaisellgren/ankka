@@ -7,7 +7,9 @@ import Math
 
 import Control.Concurrent.STM
 import Control.Monad             (unless, void)
-import Control.Monad.RWS.Strict  (RWST, asks, evalRWST, get, liftIO)
+import Control.Monad.RWS.Strict  (RWST, asks, evalRWST, get, liftIO, put)
+import Data.Maybe
+import Text.Printf
 
 import qualified Graphics.Rendering.OpenGL as GL
 import qualified Graphics.UI.GLFW as GLFW
@@ -33,6 +35,8 @@ data State = State
     , stateDragStartY      :: !Double
     , stateDragStartXAngle :: !Double
     , stateDragStartYAngle :: !Double
+    , frameNumber          :: !Int
+    , prevTime             :: !Double
     }
 
 type S = RWST Env () State IO
@@ -75,6 +79,8 @@ initialize eventChannel win = do
           , stateDragStartY      = 0
           , stateDragStartXAngle = 0
           , stateDragStartYAngle = 0
+          , frameNumber          = 0
+          , prevTime             = 0
           }
 
     void $ evalRWST (adjustWindow >> run) env state
@@ -131,6 +137,14 @@ draw = do
         fps = 60
         dt = 1 / fps
         v = (4, 2) -- Speed vector in seconds
+        pTime = prevTime state
+    now <- liftIO GLFW.getTime
+    let deltaTime = (fromMaybe 0 now) - pTime
+    put $ state
+      { frameNumber = frameNumber state + 1
+      , prevTime    = fromMaybe 0 now
+      }
+    liftIO $ putStrLn $ printf "frame: %d, deltaTime: %.3f" (frameNumber state) deltaTime
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         GL.color color
