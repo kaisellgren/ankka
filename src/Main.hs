@@ -68,7 +68,7 @@ initialize eventChannel win = do
         entity        = Entity
           { angle = 0
           , position = (0, 0) :: Vector2
-          , velocity = (0, 0) :: Vector2
+          , velocity = (5, 5) :: Vector2
           , model = Model
             { points = [(-60, -40), (60, -40), (0, 60)] :: [Vector2]
             }
