@@ -4,6 +4,7 @@ import Util
 import Event
 import Callbacks
 import Math
+import RenderUtil
 
 import Control.Concurrent.STM
 import Control.Monad             (unless, void)
@@ -139,10 +140,5 @@ draw = do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         GL.color color
         GL.translate $ vector3 (vscale v dt)
-        GL.renderPrimitive GL.Triangles $ do
-          GL.vertex $ vertex2 $ points !! 0
-          GL.vertex $ vertex2 $ points !! 1
-          GL.vertex $ vertex2 $ points !! 2
-        where
-          vertex2 (x, y) = GL.Vertex2 (realToFrac x) (realToFrac y) :: GL.Vertex2 GL.GLfloat
-          vector3 (x, y) = GL.Vector3 (realToFrac x) (realToFrac y) 0 :: GL.Vector3 GL.GLfloat
+        renderTriangle points
+        where vector3 (x, y) = GL.Vector3 (realToFrac x) (realToFrac y) 0 :: GL.Vector3 GL.GLfloat
