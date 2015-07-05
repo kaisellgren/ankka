@@ -141,4 +141,3 @@ draw = do
         GL.color color
         GL.translate $ vector3 (vscale v dt)
         renderTriangle points
-        where vector3 (x, y) = GL.Vector3 (realToFrac x) (realToFrac y) 0 :: GL.Vector3 GL.GLfloat
