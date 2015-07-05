@@ -40,7 +40,7 @@ data State = State
     , prevTime             :: !Double
     }
 
-type S = RWST Env () State IO
+type GameState = RWST Env () State IO ()
 
 main :: IO ()
 main = do
@@ -86,8 +86,7 @@ initialize eventChannel win = do
 
     void $ evalRWST (adjustWindow >> run) env state
 
--- RWST Env () State IO
-run :: S ()
+run :: GameState
 run = do
     win <- asks envWindow
 
@@ -100,7 +99,7 @@ run = do
     quit <- liftIO $ GLFW.windowShouldClose win
     unless quit run
 
-adjustWindow :: S ()
+adjustWindow :: GameState
 adjustWindow = do
     state <- get
     let width  = stateWindowWidth  state
@@ -119,7 +118,7 @@ adjustWindow = do
         GL.matrixMode GL.$= GL.Modelview 0
         GL.loadIdentity
 
-draw :: S ()
+draw :: GameState
 draw = do
     win <- asks envWindow
     state <- get
