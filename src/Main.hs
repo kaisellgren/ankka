@@ -5,6 +5,10 @@ import Event
 import Callbacks
 import Math
 import Graphics
+import World
+import Scene
+import Entity
+import Model
 
 import Control.Concurrent.STM
 import Control.Monad             (unless, void)
@@ -38,6 +42,7 @@ data State = State
     , stateDragStartYAngle :: !Double
     , frameNumber          :: !Int
     , prevTime             :: !Double
+    , scene                :: !Scene
     }
 
 type GameState = RWST Env () State IO ()
@@ -60,6 +65,14 @@ initialize eventChannel win = do
     let zDistClosest  = 10
         zDistFarthest = zDistClosest + 20
         zDist         = zDistClosest + ((zDistFarthest - zDistClosest) / 2)
+        entity        = Entity
+          { angle = 0
+          , position = (0, 0) :: Vector2
+          , velocity = (0, 0) :: Vector2
+          , model = Model
+            { points = [(-60, -40), (60, -40), (0, 60)] :: [Vector2]
+            }
+          }
         env = Env
           { envEventsChan    = eventChannel
           , envWindow        = win
@@ -82,6 +95,12 @@ initialize eventChannel win = do
           , stateDragStartYAngle = 0
           , frameNumber          = 0
           , prevTime             = 0
+          , scene                = Scene
+            { world = World
+              { entities = [entity]
+              }
+            , cameraPosition = (0, 0) :: Vector2
+            }
           }
 
     void $ evalRWST (adjustWindow >> run) env state
