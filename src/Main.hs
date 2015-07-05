@@ -109,7 +109,9 @@ run :: GameState
 run = do
     win <- asks envWindow
 
+    update
     draw
+
     liftIO $ do
         GLFW.swapBuffers win
         GL.flush
@@ -137,14 +139,22 @@ adjustWindow = do
         GL.matrixMode GL.$= GL.Modelview 0
         GL.loadIdentity
 
+update :: GameState
+update = do
+    state <- get
+    put $ state
+      { scene = (scene state)
+        { world = (world $ scene state)
+          { entities = fmap updateEntity [head $ entities $ world $ scene state]
+          }
+        }
+      }
+
 draw :: GameState
 draw = do
     win <- asks envWindow
     state <- get
     let color = GL.Color3 1 0 0 :: GL.Color3 GL.GLfloat
-        fps = 60
-        dt = 1 / fps
-        v = (40, 20) -- Speed vector in seconds
         pTime = prevTime state
     now <- liftIO GLFW.getTime
     let deltaTime = fromMaybe 0 now - pTime
@@ -156,5 +166,4 @@ draw = do
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         GL.color color
-        GL.translate $ vector3 (vscale v dt)
         renderEntity (head $ entities $ world $ scene state :: Entity)

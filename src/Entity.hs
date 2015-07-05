@@ -9,3 +9,8 @@ data Entity = Entity {
   , velocity :: Vector2
   , position :: Vector2
 }
+
+updateEntity :: Entity -> Entity
+updateEntity e = e
+    { position = vadd (position e) (velocity e)
+    }
