@@ -121,6 +121,7 @@ adjustWindow = do
 
 draw :: S ()
 draw = do
+    win <- asks envWindow
     state <- get
     let xa = stateXAngle state
         ya = stateYAngle state
@@ -137,7 +138,7 @@ draw = do
       { frameNumber = frameNumber state + 1
       , prevTime    = fromMaybe 0 now
       }
-    liftIO $ putStrLn $ printf "frame: %d, deltaTime: %.3f" (frameNumber state) deltaTime
+    liftIO $ GLFW.setWindowTitle win $ printf "frame: %d, deltaTime: %.3f" (frameNumber state) deltaTime
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         GL.color color
