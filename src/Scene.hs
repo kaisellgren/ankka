@@ -1,7 +1,8 @@
 module Scene where
 
-import Entity
+import World
 
 data Scene = Scene {
-    entities :: [Entity]
+    world :: World
+  , camera :: Camera
 }
