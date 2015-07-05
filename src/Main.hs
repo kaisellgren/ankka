@@ -104,7 +104,6 @@ adjustWindow = do
     state <- get
     let width  = stateWindowWidth  state
         height = stateWindowHeight state
-        zDist  = stateZDist        state
 
     let pos   = GL.Position 0 0
         size  = GL.Size (fromIntegral width) (fromIntegral height)
@@ -112,10 +111,10 @@ adjustWindow = do
         GL.viewport   GL.$= (pos, size)
         GL.matrixMode GL.$= GL.Projection
         GL.loadIdentity
-        GL.ortho2D (- (fromIntegral width) / 2)
-                   ((fromIntegral width) / 2)
-                   (- (fromIntegral height) / 2)
-                   ((fromIntegral height) / 2)
+        GL.ortho2D (-fromIntegral width / 2)
+                   (fromIntegral width / 2)
+                   (-fromIntegral height / 2)
+                   (fromIntegral height / 2)
         GL.matrixMode GL.$= GL.Modelview 0
         GL.loadIdentity
 
@@ -123,17 +122,14 @@ draw :: S ()
 draw = do
     win <- asks envWindow
     state <- get
-    let xa = stateXAngle state
-        ya = stateYAngle state
-        za = stateZAngle state
-        color = GL.Color3 1 0 0 :: GL.Color3 GL.GLfloat
+    let color = GL.Color3 1 0 0 :: GL.Color3 GL.GLfloat
         points = [(-60, -40), (60, -40), (0, 60)] :: [Vector2]
         fps = 60
         dt = 1 / fps
         v = (40, 20) -- Speed vector in seconds
         pTime = prevTime state
     now <- liftIO GLFW.getTime
-    let deltaTime = (fromMaybe 0 now) - pTime
+    let deltaTime = fromMaybe 0 now - pTime
     put $ state
       { frameNumber = frameNumber state + 1
       , prevTime    = fromMaybe 0 now
