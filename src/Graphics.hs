@@ -1,4 +1,4 @@
-module RenderUtil where
+module Graphics where
 
 import Math
 import qualified Graphics.Rendering.OpenGL as GL

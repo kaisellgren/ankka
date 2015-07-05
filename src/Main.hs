@@ -4,7 +4,7 @@ import Util
 import Event
 import Callbacks
 import Math
-import RenderUtil
+import Graphics
 
 import Control.Concurrent.STM
 import Control.Monad             (unless, void)
