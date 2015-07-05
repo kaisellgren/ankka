@@ -142,7 +142,6 @@ draw = do
     win <- asks envWindow
     state <- get
     let color = GL.Color3 1 0 0 :: GL.Color3 GL.GLfloat
-        points = [(-60, -40), (60, -40), (0, 60)] :: [Vector2]
         fps = 60
         dt = 1 / fps
         v = (40, 20) -- Speed vector in seconds
@@ -158,4 +157,4 @@ draw = do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         GL.color color
         GL.translate $ vector3 (vscale v dt)
-        renderTriangle points
+        renderEntity (head $ entities $ world $ scene state :: Entity)
