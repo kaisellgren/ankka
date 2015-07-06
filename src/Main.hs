@@ -73,6 +73,14 @@ initialize eventChannel win = do
             { points = [(-60, -40), (60, -40), (0, 60)] :: [Vector2]
             }
           }
+        entity2 = Entity
+          { angle = 0
+          , position = (-2, -5) :: Vector2
+          , velocity = (10, 12) :: Vector2
+          , model = Model
+            { points = [(0, 0), (50, 50), (25, 60)] :: [Vector2]
+            }
+          }
         env = Env
           { envEventsChan    = eventChannel
           , envWindow        = win
@@ -97,7 +105,7 @@ initialize eventChannel win = do
           , prevTime             = 0
           , scene                = Scene
             { world = World
-              { entities = [entity]
+              { entities = [entity, entity2]
               }
             , cameraPosition = (0, 0) :: Vector2
             }
@@ -147,7 +155,7 @@ update = do
     put $ state
       { scene = (scene state)
         { world = (world $ scene state)
-          { entities = fmap (updateEntity deltaTime) [head $ entities $ world $ scene state]
+          { entities = fmap (updateEntity deltaTime) (entities $ world $ scene state)
           }
         }
       }
@@ -168,4 +176,4 @@ draw = do
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
         GL.color color
-        renderEntity (head $ entities $ world $ scene state :: Entity)
+        mapM_ renderEntity $ entities $ world $ scene state
