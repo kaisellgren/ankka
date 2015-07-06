@@ -10,7 +10,7 @@ data Entity = Entity {
   , position :: Vector2
 }
 
-updateEntity :: Entity -> Entity
-updateEntity e = e
-    { position = vadd (position e) (velocity e)
+updateEntity :: Float -> Entity -> Entity
+updateEntity deltaTime e = e
+    { position = vadd (position e) (vscale (velocity e) deltaTime)
     }

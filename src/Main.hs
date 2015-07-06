@@ -142,10 +142,12 @@ adjustWindow = do
 update :: GameState
 update = do
     state <- get
+    now <- liftIO GLFW.getTime
+    let deltaTime = realToFrac $ fromMaybe 0 now - prevTime state
     put $ state
       { scene = (scene state)
         { world = (world $ scene state)
-          { entities = fmap updateEntity [head $ entities $ world $ scene state]
+          { entities = fmap (updateEntity deltaTime) [head $ entities $ world $ scene state]
           }
         }
       }
