@@ -11,7 +11,7 @@ import Entity
 import Model
 
 import Control.Concurrent.STM
-import Control.Monad             (unless, void)
+import Control.Monad             (unless, void, when)
 import Control.Monad.RWS.Strict  (RWST, asks, evalRWST, get, liftIO, put)
 import Data.Maybe
 import Text.Printf
@@ -152,6 +152,7 @@ update = do
     state <- get
     now <- liftIO GLFW.getTime
     let deltaTime = realToFrac $ fromMaybe 0 now - prevTime state
+    processEvents
     put $ state
       { scene = (scene state)
         { world = (world $ scene state)
@@ -159,6 +160,27 @@ update = do
           }
         }
       }
+
+processEvents :: GameState
+processEvents = do
+    tc <- asks envEventsChan
+    me <- liftIO $ atomically $ tryReadTQueue tc
+    case me of
+        Just e -> do
+            processEvent e
+            processEvents
+        Nothing -> return ()
+
+processEvent :: Event -> GameState
+processEvent e = case e of
+    (EventKey win k _ ks _) ->
+        when (ks == GLFW.KeyState'Pressed) $ do
+            -- Q, Esc: exit
+            when (k == GLFW.Key'Q || k == GLFW.Key'Escape) $
+              liftIO $ GLFW.setWindowShouldClose win True
+            when (k == GLFW.Key'Up) $
+              liftIO $ putStrLn "Pressed UP!"
+    _ -> return ()
 
 draw :: GameState
 draw = do
