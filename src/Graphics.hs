@@ -14,20 +14,7 @@ renderTriangle vertices =
     GL.renderPrimitive GL.Triangles $ mapM_ (GL.vertex . vertex2) vertices
 
 renderEntity :: Entity -> IO ()
-renderEntity e = do
-    GL.activeTexture GL.$= GL.TextureUnit 0
-    GL.textureBinding GL.Texture2D GL.$= Just (texture $ model e)
-    GL.renderPrimitive GL.Quads $ do
-       v 100 100
-       t 0 1
-       v 100 (-100)
-       t 1 1
-       v (-100) (-100)
-       t 1 0
-       v (-100) 100
-       t 0 0
-     where v x y = GL.vertex (GL.Vertex2 x y :: GL.Vertex2 GL.GLfloat)
-           t u v = GL.texCoord (GL.TexCoord2 u v :: GL.TexCoord2 GL.GLfloat)
+renderEntity e = renderTriangle $ fmap (vadd $ position e) (points (model e))
 
 vector3 :: Vector2 -> GL.Vector3 GL.GLfloat
 vector3 (x, y) = GL.Vector3 (realToFrac x) (realToFrac y) 0
