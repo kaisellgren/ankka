@@ -9,6 +9,7 @@ import World
 import Scene
 import Entity
 import Model
+import Terrain
 
 import Control.Concurrent.STM
 import Control.Monad             (unless, void, when)
@@ -63,6 +64,7 @@ initialize eventChannel win = do
     (fbWidth, fbHeight) <- GLFW.getFramebufferSize win
 
     texMetal <- makeTexture "texture/metal.jpg"
+    texDirt <- makeTexture "texture/dirt.jpg"
 
     let zDistClosest  = 10
         zDistFarthest = zDistClosest + 20
@@ -73,7 +75,7 @@ initialize eventChannel win = do
           , velocity = (5, 5) :: Vector2
           , model = Model
             { points = [(-60, -40), (60, -40), (0, 60)] :: [Vector2]
-            , texture = texMetal
+            , Model.texture = texMetal
             }
           }
         entity2 = Entity
@@ -82,7 +84,7 @@ initialize eventChannel win = do
           , velocity = (10, 12) :: Vector2
           , model = Model
             { points = [(0, 0), (50, 50), (25, 60)] :: [Vector2]
-            , texture = texMetal
+            , Model.texture = texMetal
             }
           }
         env = Env
@@ -110,6 +112,9 @@ initialize eventChannel win = do
           , scene                = Scene
             { world = World
               { entities = [entity, entity2]
+              , width = 5120
+              , height = 5120
+              , World.texture = texDirt
               }
             , cameraPosition = (0, 0) :: Vector2
             }
@@ -211,5 +216,5 @@ draw = do
     liftIO $ GLFW.setWindowTitle win $ printf "frame: %d, deltaTime: %.3f" (frameNumber state) deltaTime
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
-        --GL.color color
+        renderTerrain $ world $ scene state
         mapM_ renderEntity $ entities $ world $ scene state

@@ -9,6 +9,12 @@ import Control.Applicative
 import qualified Graphics.GLUtil as GLU
 import qualified Graphics.Rendering.OpenGL as GL
 
+renderVertex :: Integral a => a -> a -> IO ()
+renderVertex x y = GL.vertex (GL.Vertex2 (fromIntegral x) (fromIntegral y) :: GL.Vertex2 GL.GLfloat)
+
+texCoord :: GL.GLfloat -> GL.GLfloat -> IO ()
+texCoord u v = GL.texCoord (GL.TexCoord2 u v :: GL.TexCoord2 GL.GLfloat)
+
 renderTriangle :: [Vector2] -> IO ()
 renderTriangle vertices =
     GL.renderPrimitive GL.Triangles $ mapM_ (GL.vertex . vertex2) vertices
