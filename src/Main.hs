@@ -62,6 +62,8 @@ initialize eventChannel win = do
 
     (fbWidth, fbHeight) <- GLFW.getFramebufferSize win
 
+    texMetal <- makeTexture "texture/metal.jpg"
+
     let zDistClosest  = 10
         zDistFarthest = zDistClosest + 20
         zDist         = zDistClosest + ((zDistFarthest - zDistClosest) / 2)
@@ -71,6 +73,7 @@ initialize eventChannel win = do
           , velocity = (5, 5) :: Vector2
           , model = Model
             { points = [(-60, -40), (60, -40), (0, 60)] :: [Vector2]
+            , texture = texMetal
             }
           }
         entity2 = Entity
@@ -79,6 +82,7 @@ initialize eventChannel win = do
           , velocity = (10, 12) :: Vector2
           , model = Model
             { points = [(0, 0), (50, 50), (25, 60)] :: [Vector2]
+            , texture = texMetal
             }
           }
         env = Env
@@ -139,6 +143,8 @@ adjustWindow = do
     liftIO $ do
         GL.viewport   GL.$= (pos, size)
         GL.matrixMode GL.$= GL.Projection
+        GL.texture    GL.Texture2D GL.$= GL.Enabled
+        GL.normalize  GL.$= GL.Enabled
         GL.loadIdentity
         GL.ortho2D (-fromIntegral width / 2)
                    (fromIntegral width / 2)
@@ -197,5 +203,5 @@ draw = do
     liftIO $ GLFW.setWindowTitle win $ printf "frame: %d, deltaTime: %.3f" (frameNumber state) deltaTime
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
-        GL.color color
+        --GL.color color
         mapM_ renderEntity $ entities $ world $ scene state
