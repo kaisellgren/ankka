@@ -12,7 +12,7 @@ import Model
 
 import Control.Concurrent.STM
 import Control.Monad             (unless, void, when)
-import Control.Monad.RWS.Strict  (RWST, asks, evalRWST, get, liftIO, put)
+import Control.Monad.RWS.Strict  (RWST, asks, evalRWST, get, liftIO, put, modify)
 import Data.Maybe
 import Text.Printf
 
@@ -186,6 +186,14 @@ processEvent e = case e of
               liftIO $ GLFW.setWindowShouldClose win True
             when (k == GLFW.Key'Up) $
               liftIO $ putStrLn "Pressed UP!"
+
+    (EventFramebufferSize _ width height) -> do
+        modify $ \s -> s
+          { stateWindowWidth  = width
+          , stateWindowHeight = height
+          }
+        adjustWindow
+
     _ -> return ()
 
 draw :: GameState
