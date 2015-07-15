@@ -33,4 +33,4 @@ makeTexture f = do
     t <- either error id <$> GLU.readTexture f
     GL.textureFilter GL.Texture2D GL.$= ((GL.Linear', Nothing), GL.Linear')
     GLU.texture2DWrap GL.$= (GL.Mirrored, GL.ClampToEdge)
-    return t
+    pure t

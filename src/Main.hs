@@ -11,6 +11,7 @@ import Entity
 import Model
 import Terrain
 
+import Control.Applicative
 import Control.Concurrent.STM
 import Control.Monad             (unless, void, when)
 import Control.Monad.RWS.Strict  (RWST, asks, evalRWST, get, liftIO, put, modify)
@@ -180,7 +181,7 @@ processEvents = do
         Just e -> do
             processEvent e
             processEvents
-        Nothing -> return ()
+        Nothing -> pure ()
 
 processEvent :: Event -> GameState
 processEvent e = case e of
@@ -206,7 +207,7 @@ processEvent e = case e of
           }
         adjustWindow
 
-    _ -> return ()
+    _ -> pure ()
 
 draw :: GameState
 draw = do
