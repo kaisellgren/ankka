@@ -147,15 +147,13 @@ processEvent :: Event -> GameState
 processEvent e = case e of
     (EventKey win k _ ks _) ->
         when (ks == GLFW.KeyState'Repeating) $ do
-            -- Q, Esc: exit
-            when (k == GLFW.Key'Q || k == GLFW.Key'Escape) $
-              liftIO $ GLFW.setWindowShouldClose win True
             when (k == GLFW.Key'Up) $ moveCamera 0 10
             when (k == GLFW.Key'Right) $ moveCamera 10 0
             when (k == GLFW.Key'Down) $ moveCamera 0 (-10)
             when (k == GLFW.Key'Left) $ moveCamera (-10) 0
 
       where moveCamera h v = modify $ \state -> state
+            when (k == GLFW.Key'Q || k == GLFW.Key'Escape) $ liftIO $ GLFW.setWindowShouldClose win True
                 { scene = (scene state)
                     { cameraPosition = vadd (cameraPosition (scene state)) ((h, v) :: Vector2) }
                 }
