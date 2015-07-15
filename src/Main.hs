@@ -10,6 +10,8 @@ import Scene
 import Entity
 import Model
 import Terrain
+import Env
+import State
 
 import Control.Applicative
 import Control.Concurrent.STM
@@ -20,19 +22,6 @@ import Text.Printf
 
 import qualified Graphics.Rendering.OpenGL as GL
 import qualified Graphics.UI.GLFW as GLFW
-
-data Env = Env
-    { envEventsChan    :: TQueue Event
-    , envWindow        :: !GLFW.Window
-    }
-
-data State = State
-    { stateWindowWidth     :: !Int
-    , stateWindowHeight    :: !Int
-    , frameNumber          :: !Int
-    , prevTime             :: !Double
-    , scene                :: !Scene
-    }
 
 type GameState = RWST Env () State IO ()
 
