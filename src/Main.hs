@@ -24,24 +24,11 @@ import qualified Graphics.UI.GLFW as GLFW
 data Env = Env
     { envEventsChan    :: TQueue Event
     , envWindow        :: !GLFW.Window
-    , envZDistClosest  :: !Double
-    , envZDistFarthest :: !Double
     }
 
 data State = State
     { stateWindowWidth     :: !Int
     , stateWindowHeight    :: !Int
-    , stateXAngle          :: !Double
-    , stateYAngle          :: !Double
-    , stateZAngle          :: !Double
-    , stateGearZAngle      :: !Double
-    , stateZDist           :: !Double
-    , stateMouseDown       :: !Bool
-    , stateDragging        :: !Bool
-    , stateDragStartX      :: !Double
-    , stateDragStartY      :: !Double
-    , stateDragStartXAngle :: !Double
-    , stateDragStartYAngle :: !Double
     , frameNumber          :: !Int
     , prevTime             :: !Double
     , scene                :: !Scene
@@ -67,10 +54,7 @@ initialize eventChannel win = do
     texMetal <- makeTexture "texture/metal.jpg"
     texDirt <- makeTexture "texture/dirt.jpg"
 
-    let zDistClosest  = 10
-        zDistFarthest = zDistClosest + 20
-        zDist         = zDistClosest + ((zDistFarthest - zDistClosest) / 2)
-        entity        = Entity
+    let entity = Entity
           { angle = 0
           , position = (0, 0) :: Vector2
           , velocity = (5, 5) :: Vector2
@@ -91,23 +75,10 @@ initialize eventChannel win = do
         env = Env
           { envEventsChan    = eventChannel
           , envWindow        = win
-          , envZDistClosest  = zDistClosest
-          , envZDistFarthest = zDistFarthest
           }
         state = State
           { stateWindowWidth     = fbWidth
           , stateWindowHeight    = fbHeight
-          , stateXAngle          = 0
-          , stateYAngle          = 0
-          , stateZAngle          = 0
-          , stateGearZAngle      = 0
-          , stateZDist           = zDist
-          , stateMouseDown       = False
-          , stateDragging        = False
-          , stateDragStartX      = 0
-          , stateDragStartY      = 0
-          , stateDragStartXAngle = 0
-          , stateDragStartYAngle = 0
           , frameNumber          = 0
           , prevTime             = 0
           , scene                = Scene
