@@ -160,10 +160,10 @@ adjustWindow = do
 
 update :: GameState
 update = do
+    processEvents
     state <- get
     now <- liftIO GLFW.getTime
     let deltaTime = realToFrac $ fromMaybe 0 now - prevTime state
-    processEvents
     put $ state
       { scene = (scene state)
         { world = (world $ scene state)
@@ -185,12 +185,19 @@ processEvents = do
 processEvent :: Event -> GameState
 processEvent e = case e of
     (EventKey win k _ ks _) ->
-        when (ks == GLFW.KeyState'Pressed) $ do
+        when (ks == GLFW.KeyState'Repeating) $ do
             -- Q, Esc: exit
             when (k == GLFW.Key'Q || k == GLFW.Key'Escape) $
               liftIO $ GLFW.setWindowShouldClose win True
-            when (k == GLFW.Key'Up) $
-              liftIO $ putStrLn "Pressed UP!"
+            when (k == GLFW.Key'Up) $ moveCamera 0 10
+            when (k == GLFW.Key'Right) $ moveCamera 10 0
+            when (k == GLFW.Key'Down) $ moveCamera 0 (-10)
+            when (k == GLFW.Key'Left) $ moveCamera (-10) 0
+
+      where moveCamera h v = modify $ \state -> state
+                { scene = (scene state)
+                    { cameraPosition = vadd (cameraPosition (scene state)) ((h, v) :: Vector2) }
+                }
 
     (EventFramebufferSize _ width height) -> do
         modify $ \s -> s
@@ -207,14 +214,18 @@ draw = do
     state <- get
     let color = GL.Color3 1 0 0 :: GL.Color3 GL.GLfloat
         pTime = prevTime state
+        camPos = cameraPosition $ scene state
     now <- liftIO GLFW.getTime
     let deltaTime = fromMaybe 0 now - pTime
     put $ state
       { frameNumber = frameNumber state + 1
       , prevTime    = fromMaybe 0 now
       }
-    liftIO $ GLFW.setWindowTitle win $ printf "frame: %d, deltaTime: %.3f" (frameNumber state) deltaTime
+    liftIO $ GLFW.setWindowTitle win $
+        printf "frame: %d, deltaTime: %.3f, camPos: (%f, %f)" (frameNumber state) deltaTime (fst camPos) (snd camPos)
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
+        GL.loadIdentity
+        GL.translate $ vector3 $ vneg camPos
         renderTerrain $ world $ scene state
         mapM_ renderEntity $ entities $ world $ scene state
