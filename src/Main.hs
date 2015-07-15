@@ -12,6 +12,7 @@ import Model
 import Terrain
 import Env
 import State
+import qualified Input as Input
 
 import Control.Applicative
 import Control.Concurrent.STM
@@ -79,6 +80,8 @@ initialize eventChannel win = do
               }
             , cameraPosition = (0, 0) :: Vector2
             }
+          , input = Input.Input
+            { Input.pressedKeys = Input.pressedKeysDefault }
           }
 
     void $ evalRWST (adjustWindow >> run) env state
@@ -122,16 +125,33 @@ adjustWindow = do
 update :: GameState
 update = do
     processEvents
+
     state <- get
     now <- liftIO GLFW.getTime
     let deltaTime = realToFrac $ fromMaybe 0 now - prevTime state
-    put $ state
-      { scene = (scene state)
-        { world = (world $ scene state)
-          { entities = fmap (updateEntity deltaTime) (entities $ world $ scene state)
+
+    updateCamera deltaTime
+
+    modify $ \s -> s
+      { scene = (scene s)
+        { world = (world $ scene s)
+          { entities = fmap (updateEntity deltaTime) (entities $ world $ scene s)
           }
         }
       }
+
+updateCamera :: Float -> GameState
+updateCamera deltaTime = do
+    state <- get
+    when (Input.up $ Input.pressedKeys $ input state) $ moveCamera 0 1000
+    when (Input.down $ Input.pressedKeys $ input state) $ moveCamera 0 (-1000)
+    when (Input.right $ Input.pressedKeys $ input state) $ moveCamera 1000 0
+    when (Input.left $ Input.pressedKeys $ input state) $ moveCamera (-1000) 0
+  where moveCamera x y = modify $ \s -> s
+          { scene = (scene s)
+            { cameraPosition = vadd (cameraPosition (scene s)) ((x * deltaTime, y * deltaTime) :: Vector2)
+            }
+          }
 
 processEvents :: GameState
 processEvents = do
@@ -145,18 +165,24 @@ processEvents = do
 
 processEvent :: Event -> GameState
 processEvent e = case e of
-    (EventKey win k _ ks _) ->
-        when (ks == GLFW.KeyState'Repeating) $ do
-            when (k == GLFW.Key'Up) $ moveCamera 0 10
-            when (k == GLFW.Key'Right) $ moveCamera 10 0
-            when (k == GLFW.Key'Down) $ moveCamera 0 (-10)
-            when (k == GLFW.Key'Left) $ moveCamera (-10) 0
+    (EventKey win k _ ks _) -> do
+        let isKeyDown = ks == GLFW.KeyState'Pressed
+            isKeyUp = ks == GLFW.KeyState'Released
 
-      where moveCamera h v = modify $ \state -> state
+        when (isKeyDown || isKeyUp) $ do
+            when (k == GLFW.Key'Up) $ toggleKey $ \state -> (Input.pressedKeys $ input state) { Input.up = isKeyDown }
+            when (k == GLFW.Key'Right) $ toggleKey $ \state -> (Input.pressedKeys $ input state) { Input.right = isKeyDown }
+            when (k == GLFW.Key'Down) $ toggleKey $ \state -> (Input.pressedKeys $ input state) { Input.down = isKeyDown }
+            when (k == GLFW.Key'Left) $ toggleKey $ \state -> (Input.pressedKeys $ input state) { Input.left = isKeyDown }
+
+        when isKeyDown $ do
             when (k == GLFW.Key'Q || k == GLFW.Key'Escape) $ liftIO $ GLFW.setWindowShouldClose win True
-                { scene = (scene state)
-                    { cameraPosition = vadd (cameraPosition (scene state)) ((h, v) :: Vector2) }
+
+      where toggleKey fn = modify $ \state -> state
+              { input = (input state)
+                { Input.pressedKeys = fn state
                 }
+              }
 
     (EventFramebufferSize _ width height) -> do
         modify $ \s -> s

@@ -1,6 +1,7 @@
 module State where
 
 import Scene
+import Input
 
 data State = State
     { stateWindowWidth     :: !Int
@@ -8,4 +9,5 @@ data State = State
     , frameNumber          :: !Int
     , prevTime             :: !Double
     , scene                :: !Scene
+    , input                :: !Input
     }
