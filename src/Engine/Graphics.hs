@@ -1,8 +1,6 @@
 module Engine.Graphics where
 
 import Util.Math
-import Game.Entity
-import Game.Model
 
 import Control.Applicative
 
@@ -18,9 +16,6 @@ texCoord u v = GL.texCoord (GL.TexCoord2 u v :: GL.TexCoord2 GL.GLfloat)
 renderTriangle :: [Vector2] -> IO ()
 renderTriangle vertices =
     GL.renderPrimitive GL.Triangles $ mapM_ (GL.vertex . vertex2) vertices
-
-renderEntity :: Entity -> IO ()
-renderEntity e = renderTriangle $ fmap (vadd $ position e) (points (model e))
 
 vector3 :: Vector2 -> GL.Vector3 GL.GLfloat
 vector3 (x, y) = GL.Vector3 (realToFrac x) (realToFrac y) 0

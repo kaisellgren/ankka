@@ -1,5 +1,6 @@
 module Game.Entity where
 
+import Engine.Graphics
 import Game.Model
 import Util.Math
 
@@ -14,3 +15,6 @@ updateEntity :: Float -> Entity -> Entity
 updateEntity deltaTime e = e
     { position = vadd (position e) (vscale (velocity e) deltaTime)
     }
+
+renderEntity :: Entity -> IO ()
+renderEntity e = renderTriangle $ fmap (vadd $ position e) (points (model e))
