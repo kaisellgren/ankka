@@ -1,8 +1,8 @@
-module Engine.Graphics where
+module Graphics where
 
-import Util.Math
-import Game.Entity
-import Game.Model
+import Math
+import Entity
+import Model
 
 import Control.Applicative
 

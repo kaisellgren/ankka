@@ -1,4 +1,4 @@
-module Engine.Input where
+module Input where
 
 data Input = Input
     { pressedKeys :: PressedKeys

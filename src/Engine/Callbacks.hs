@@ -1,6 +1,6 @@
-module Engine.Callbacks where
+module Callbacks where
 
-import Engine.Event
+import Event
 
 import Control.Concurrent.STM
 

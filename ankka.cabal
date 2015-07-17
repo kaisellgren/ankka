@@ -63,7 +63,7 @@ executable ankka
                        bytestring >= 0.10.4.0, FTGL >= 2.1
 
   -- Directories containing source files.
-  hs-source-dirs:      src
+  hs-source-dirs:      src, src/Engine, src/Game, src/Util
 
   -- Base language which the package is written in.
   default-language:    Haskell2010

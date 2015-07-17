@@ -1,7 +1,7 @@
-module Engine.State where
+module State where
 
-import Game.Scene
-import Engine.Input
+import Scene
+import Input
 
 data State = State
     { stateWindowWidth     :: !Int

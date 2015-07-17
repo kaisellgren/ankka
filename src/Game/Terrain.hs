@@ -1,7 +1,7 @@
-module Game.Terrain where
+module Terrain where
 
-import Game.World
-import Engine.Graphics
+import World
+import Graphics
 
 import qualified Graphics.Rendering.OpenGL as GL
 

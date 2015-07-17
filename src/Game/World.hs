@@ -1,6 +1,6 @@
-module Game.World where
+module World where
 
-import Game.Entity
+import Entity
 
 import qualified Graphics.Rendering.OpenGL as GL
 

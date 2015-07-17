@@ -1,18 +1,18 @@
 module Main where
 
-import Util.Util
-import Engine.Event
-import Engine.Callbacks
-import Util.Math
-import Engine.Graphics
-import Game.World
-import Game.Scene
-import Game.Entity
-import Game.Model
-import Game.Terrain
-import Engine.Env
-import Engine.State
-import qualified Engine.Input as Input
+import Util
+import Event
+import Callbacks
+import Math
+import Graphics
+import World
+import Scene
+import Entity
+import Model
+import Terrain
+import Env
+import State
+import qualified Input as Input
 
 import Control.Applicative
 import Control.Concurrent.STM
@@ -54,7 +54,7 @@ initialize eventChannel win = do
           , velocity = (5, 5) :: Vector2
           , model = Model
             { points = [(-60, -40), (60, -40), (0, 60)] :: [Vector2]
-            , Game.Model.texture = texMetal
+            , Model.texture = texMetal
             }
           }
         entity2 = Entity
@@ -63,7 +63,7 @@ initialize eventChannel win = do
           , velocity = (10, 12) :: Vector2
           , model = Model
             { points = [(0, 0), (50, 50), (25, 60)] :: [Vector2]
-            , Game.Model.texture = texMetal
+            , Model.texture = texMetal
             }
           }
         env = Env
@@ -81,7 +81,7 @@ initialize eventChannel win = do
               { entities = [entity, entity2]
               , width = 5120
               , height = 5120
-              , Game.World.texture = texDirt
+              , World.texture = texDirt
               }
             , cameraPosition = (0, 0) :: Vector2
             }

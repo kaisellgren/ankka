@@ -1,7 +1,7 @@
-module Game.Scene where
+module Scene where
 
-import Game.World
-import Util.Math
+import World
+import Math
 
 data Scene = Scene {
     world :: World

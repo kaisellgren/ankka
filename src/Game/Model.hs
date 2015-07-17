@@ -1,6 +1,6 @@
-module Game.Model where
+module Model where
 
-import Util.Math
+import Math
 
 import qualified Graphics.Rendering.OpenGL as GL
 

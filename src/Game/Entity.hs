@@ -1,7 +1,7 @@
-module Game.Entity where
+module Entity where
 
-import Game.Model
-import Util.Math
+import Model
+import Math
 
 data Entity = Entity {
     angle :: Float
