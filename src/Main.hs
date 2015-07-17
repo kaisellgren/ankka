@@ -20,6 +20,7 @@ import Control.Monad             (unless, void, when)
 import Control.Monad.RWS.Strict  (RWST, asks, evalRWST, get, liftIO, put, modify)
 import Data.Maybe
 import Text.Printf
+import Graphics.Rendering.FTGL
 
 import qualified Graphics.Rendering.OpenGL as GL
 import qualified Graphics.UI.GLFW as GLFW
@@ -43,6 +44,7 @@ initialize eventChannel win = do
 
     texMetal <- makeTexture "texture/metal.jpg"
     texDirt <- makeTexture "texture/dirt.jpg"
+    openSans <- createTextureFont "fonts/OpenSans-Regular.ttf"
 
     let entity = Entity
           { angle = 0
@@ -65,6 +67,7 @@ initialize eventChannel win = do
         env = Env
           { envEventsChan    = eventChannel
           , envWindow        = win
+          , envOpenSans      = openSans
           }
         state = State
           { stateWindowWidth     = fbWidth
@@ -196,6 +199,7 @@ processEvent e = case e of
 draw :: GameState
 draw = do
     win <- asks envWindow
+    openSans <- asks envOpenSans
     state <- get
     let color = GL.Color3 1 0 0 :: GL.Color3 GL.GLfloat
         pTime = prevTime state
@@ -210,7 +214,9 @@ draw = do
         printf "frame: %d, deltaTime: %.3f, camPos: (%f, %f)" (frameNumber state) deltaTime (fst camPos) (snd camPos)
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
+        setFontFaceSize openSans 24 72
         GL.loadIdentity
         GL.translate $ vector3 $ vneg camPos
         renderTerrain $ world $ scene state
         mapM_ renderEntity $ entities $ world $ scene state
+        renderFont openSans "Hello world!" All
