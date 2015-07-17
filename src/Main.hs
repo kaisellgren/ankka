@@ -46,6 +46,8 @@ initialize eventChannel win = do
     texDirt <- makeTexture "texture/dirt.jpg"
     openSans <- createTextureFont "fonts/OpenSans-Regular.ttf"
 
+    setFontFaceSize openSans 24 72
+
     let entity = Entity
           { angle = 0
           , position = (0, 0) :: Vector2
@@ -201,6 +203,8 @@ draw = do
     win <- asks envWindow
     openSans <- asks envOpenSans
     state <- get
+    let w = stateWindowWidth state
+        h = stateWindowHeight state
     let color = GL.Color3 1 0 0 :: GL.Color3 GL.GLfloat
         pTime = prevTime state
         camPos = cameraPosition $ scene state
@@ -210,13 +214,13 @@ draw = do
       { frameNumber = frameNumber state + 1
       , prevTime    = fromMaybe 0 now
       }
-    liftIO $ GLFW.setWindowTitle win $
-        printf "frame: %d, deltaTime: %.3f, camPos: (%f, %f)" (frameNumber state) deltaTime (fst camPos) (snd camPos)
     liftIO $ do
         GL.clear [GL.ColorBuffer, GL.DepthBuffer]
-        setFontFaceSize openSans 24 72
         GL.loadIdentity
         GL.translate $ vector3 $ vneg camPos
         renderTerrain $ world $ scene state
         mapM_ renderEntity $ entities $ world $ scene state
-        renderFont openSans "Hello world!" All
+
+        GL.loadIdentity
+        GL.translate $ vector3 (fromIntegral (-w) / 2.0, fromIntegral h / 2.0 - 24)
+        renderFont openSans (printf "frame: %d, deltaTime: %.3f, camPos: (%f, %f)" (frameNumber state) deltaTime (fst camPos) (snd camPos)) All
