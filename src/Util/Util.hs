@@ -1,4 +1,4 @@
-module Util where
+module Util.Util where
 
 import qualified Graphics.UI.GLFW as GLFW
 import Control.Monad

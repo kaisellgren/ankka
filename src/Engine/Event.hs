@@ -1,4 +1,4 @@
-module Event where
+module Engine.Event where
 
 import qualified Graphics.UI.GLFW as GLFW
 

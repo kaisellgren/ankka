@@ -1,4 +1,4 @@
-module Math where
+module Util.Math where
 
 type Vector2 = (Float, Float)
 

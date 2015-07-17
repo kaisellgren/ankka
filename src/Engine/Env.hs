@@ -1,6 +1,6 @@
-module Env where
+module Engine.Env where
 
-import Event
+import Engine.Event
 
 import Control.Concurrent.STM
 import Graphics.Rendering.FTGL
