@@ -4,8 +4,7 @@ import Engine.Event
 
 import Control.Concurrent.STM
 
-import qualified Graphics.Rendering.OpenGL as GL
-import qualified Graphics.UI.GLFW          as GLFW
+import qualified Graphics.UI.GLFW as GLFW
 
 errorCallback           :: TQueue Event -> GLFW.Error -> String -> IO ()
 windowPosCallback       :: TQueue Event -> GLFW.Window -> Int -> Int -> IO ()
@@ -22,7 +21,7 @@ scrollCallback          :: TQueue Event -> GLFW.Window -> Double -> Double -> IO
 keyCallback             :: TQueue Event -> GLFW.Window -> GLFW.Key -> Int -> GLFW.KeyState -> GLFW.ModifierKeys -> IO ()
 charCallback            :: TQueue Event -> GLFW.Window -> Char -> IO ()
 
-errorCallback           tc e s        = atomically $ writeTQueue tc $ EventError           e s
+errorCallback           tc e s            = atomically $ writeTQueue tc $ EventError           e s
 windowPosCallback       tc win x y        = atomically $ writeTQueue tc $ EventWindowPos       win x y
 windowSizeCallback      tc win w h        = atomically $ writeTQueue tc $ EventWindowSize      win w h
 windowCloseCallback     tc win            = atomically $ writeTQueue tc $ EventWindowClose     win
@@ -39,20 +38,6 @@ charCallback            tc win c          = atomically $ writeTQueue tc $ EventC
 
 setCallbacks :: TQueue Event -> GLFW.Window -> IO ()
 setCallbacks eventChannel win = do
-    {- GLFW.setErrorCallback getCallback errorCallback
-    GLFW.setWindowPosCallback getCallback windowPosCallback
-    GLFW.setWindowSizeCallback getCallback windowSizeCallback
-    GLFW.setWindowCloseCallback getCallback windowCloseCallback
-    GLFW.setWindowRefreshCallback getCallback windowRefreshCallback
-    GLFW.setWindowFocusCallback getCallback windowFocusCallback
-    GLFW.setWindowIconifyCallback getCallback windowIconifyCallback
-    GLFW.setFramebufferSizeCallback getCallback framebufferSizeCallback
-    GLFW.setMouseButtonCallback getCallback mouseButtonCallback
-    GLFW.setCursorPosCallback getCallback cursorPosCallback
-    GLFW.setCursorEnterCallback getCallback cursorEnterCallback
-    GLFW.setScrollCallback getCallback scrollCallback
-    GLFW.setKeyCallback getCallback keyCallback
-    GLFW.setCharCallback getCallback charCallback -}
     GLFW.setErrorCallback           $ Just $ errorCallback           eventChannel
     GLFW.setWindowPosCallback       win $ Just $ windowPosCallback       eventChannel
     GLFW.setWindowSizeCallback      win $ Just $ windowSizeCallback      eventChannel
