@@ -2,6 +2,7 @@ module Game.Terrain where
 
 import Game.World
 import Engine.Graphics
+import Util.Vector2
 
 import qualified Graphics.Rendering.OpenGL as GL
 
@@ -18,11 +19,11 @@ renderTerrain world = do
         makeQuad size (x, y) = GL.renderPrimitive GL.Quads $ do
             let offsetX = size * x
                 offsetY = size * y
-            renderVertex (offsetX + size) (offsetY + size)
+            renderVertex $ Vector2 (fromIntegral $ offsetX + size) (fromIntegral $ offsetY + size)
             texCoord 1 1
-            renderVertex (offsetX + size) offsetY
+            renderVertex $ Vector2 (fromIntegral $ offsetX + size) $ fromIntegral offsetY
             texCoord 0 1
-            renderVertex offsetX offsetY
+            renderVertex $ Vector2 (fromIntegral offsetX) $ fromIntegral offsetY
             texCoord 0 0
-            renderVertex offsetX (offsetY + size)
+            renderVertex $ Vector2 (fromIntegral offsetX) (fromIntegral $ offsetY + size)
             texCoord 1 0

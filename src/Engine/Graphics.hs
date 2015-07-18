@@ -8,11 +8,8 @@ import Control.Applicative
 import qualified Graphics.GLUtil as GLU
 import qualified Graphics.Rendering.OpenGL as GL
 
-renderVertex :: Integral a => a -> a -> IO ()
-renderVertex x y = GL.vertex (GL.Vertex2 (fromIntegral x) (fromIntegral y) :: GL.Vertex2 GL.GLfloat)
-
-renderVertexVector :: Vector2 -> IO ()
-renderVertexVector (Vector2 x y) = GL.vertex $ GL.Vertex2 (float2gl x) (float2gl y)
+renderVertex :: Vector2 -> IO ()
+renderVertex (Vector2 x y) = GL.vertex $ GL.Vertex2 (float2gl x) (float2gl y)
 
 texCoord :: GL.GLfloat -> GL.GLfloat -> IO ()
 texCoord u v = GL.texCoord (GL.TexCoord2 u v :: GL.TexCoord2 GL.GLfloat)
@@ -25,7 +22,7 @@ renderRectangle :: [Vector2] -> IO ()
 renderRectangle vertices = GL.renderPrimitive GL.Quads $ mapM_ makeQuadPart $ zip vertices texCoords
   where texCoords = [(1, 1), (0, 1), (0, 0), (1, 0)]
         makeQuadPart (vertex, (a, b)) = do
-          renderVertexVector vertex
+          renderVertex vertex
           texCoord a b
 
 vector3 :: Vector2 -> GL.Vector3 GL.GLfloat
