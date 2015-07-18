@@ -2,7 +2,7 @@ module Game.Entity where
 
 import Engine.Graphics
 import Game.Model
-import Util.Math
+import Util.Vector2
 
 import qualified Graphics.Rendering.OpenGL as GL
 

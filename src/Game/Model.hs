@@ -1,6 +1,6 @@
 module Game.Model where
 
-import Util.Math
+import Util.Vector2
 
 import qualified Graphics.Rendering.OpenGL as GL
 

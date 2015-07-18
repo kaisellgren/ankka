@@ -3,7 +3,7 @@ module Main where
 import Util.Util
 import Engine.Event
 import Engine.Callbacks
-import Util.Math
+import Util.Vector2
 import Engine.Graphics
 import Game.World
 import Game.Scene
@@ -51,19 +51,19 @@ initialize eventChannel win = do
 
     let entity = Entity
           { angle = 0
-          , position = (0, 0) :: Vector2
-          , velocity = (5, 5) :: Vector2
+          , position = Vector2 0 0
+          , velocity = Vector2 5 5
           , model = Model
-            { points = [(0, 0), (256, 0), (256, 256), (0, 256)] :: [Vector2]
+            { points = [Vector2 0 0, Vector2 256 0, Vector2 256 256, Vector2 0 256]
             , Game.Model.texture = texDirt
             }
           }
         entity2 = Entity
           { angle = 0
-          , position = (256, 256) :: Vector2
-          , velocity = (10, 12) :: Vector2
+          , position = Vector2 256 256
+          , velocity = Vector2 10 12
           , model = Model
-            { points = [(0, 0), (128, 0), (128, 128), (0, 128)] :: [Vector2]
+            { points = [Vector2 0 0, Vector2 128 0, Vector2 128 128, Vector2 0 128]
             , Game.Model.texture = texBush04
             }
           }
@@ -84,7 +84,7 @@ initialize eventChannel win = do
               , height = 5120
               , Game.World.texture = texDirt
               }
-            , cameraPosition = (0, 0) :: Vector2
+            , cameraPosition = Vector2 0 0
             }
           , input = Input.Input
             { Input.pressedKeys = Input.pressedKeysDefault }
@@ -157,7 +157,7 @@ updateCamera deltaTime = do
     when (Input.left $ Input.pressedKeys $ input state) $ moveCamera (-1000) 0
   where moveCamera x y = modify $ \s -> s
           { scene = (scene s)
-            { cameraPosition = vadd (cameraPosition (scene s)) ((x * deltaTime, y * deltaTime) :: Vector2)
+            { cameraPosition = vadd (cameraPosition (scene s)) $ Vector2 (x * deltaTime) (y * deltaTime)
             }
           }
 
@@ -225,5 +225,5 @@ draw = do
         mapM_ renderEntity $ entities $ world $ scene state
 
         GL.loadIdentity
-        GL.translate $ vector3 (fromIntegral (-w) / 2.0, fromIntegral h / 2.0 - 24)
-        renderFont openSans (printf "frame: %d, deltaTime: %.3f, camPos: (%f, %f)" (frameNumber state) deltaTime (fst camPos) (snd camPos)) All
+        GL.translate $ vector3 $ Vector2 (fromIntegral (-w) / 2.0) (fromIntegral h / 2.0 - 24)
+        renderFont openSans (printf "frame: %d, deltaTime: %.3f, camPos: %s" (frameNumber state) deltaTime camPos) All
