@@ -126,6 +126,8 @@ adjustWindow = do
                    (-fromIntegral height / 2)
                    (fromIntegral height / 2)
         GL.matrixMode GL.$= GL.Modelview 0
+        GL.blend      GL.$= GL.Enabled
+        GL.blendFunc  GL.$= (GL.SrcAlpha, GL.OneMinusSrcAlpha)
         GL.loadIdentity
 
 update :: GameState
