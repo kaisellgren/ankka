@@ -44,6 +44,7 @@ initialize eventChannel win = do
 
     texMetal <- makeTexture "texture/metal.jpg"
     texDirt <- makeTexture "texture/dirt.jpg"
+    texBush04 <- makeTexture "texture/bush04.png"
     openSans <- createTextureFont "fonts/OpenSans-Regular.ttf"
 
     setFontFaceSize openSans 24 72
@@ -53,17 +54,17 @@ initialize eventChannel win = do
           , position = (0, 0) :: Vector2
           , velocity = (5, 5) :: Vector2
           , model = Model
-            { points = [(-60, -40), (60, -40), (0, 60)] :: [Vector2]
-            , Game.Model.texture = texMetal
+            { points = [(0, 0), (256, 0), (256, 256), (0, 256)] :: [Vector2]
+            , Game.Model.texture = texDirt
             }
           }
         entity2 = Entity
           { angle = 0
-          , position = (-2, -5) :: Vector2
+          , position = (256, 256) :: Vector2
           , velocity = (10, 12) :: Vector2
           , model = Model
-            { points = [(0, 0), (50, 50), (25, 60)] :: [Vector2]
-            , Game.Model.texture = texMetal
+            { points = [(0, 0), (128, 0), (128, 128), (0, 128)] :: [Vector2]
+            , Game.Model.texture = texBush04
             }
           }
         env = Env
