@@ -13,6 +13,14 @@ data Entity = Entity {
   , position :: Vector2
 }
 
+createEntity :: Entity
+createEntity = Entity
+  { angle = 0
+  , position = Vector2 0 0
+  , velocity = Vector2 0 0
+  , model = undefined
+  }
+
 renderEntity :: Entity -> IO ()
 renderEntity e = do
     GL.activeTexture GL.$= GL.TextureUnit 0

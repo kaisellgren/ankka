@@ -22,6 +22,7 @@ import Control.Monad.RWS.Strict  (RWST, asks, evalRWST, get, liftIO, put, modify
 import Data.Maybe
 import Text.Printf
 import Graphics.Rendering.FTGL
+import System.Random
 
 import qualified Graphics.Rendering.OpenGL as GL
 import qualified Graphics.UI.GLFW as GLFW
@@ -45,35 +46,22 @@ initialize eventChannel win = do
 
     texMetal <- makeTexture "texture/metal.jpg"
     texDirt <- makeTexture "texture/dirt.jpg"
+    texBush01 <- makeTexture "texture/bush01.png"
+    texBush02 <- makeTexture "texture/bush02.png"
+    texBush03 <- makeTexture "texture/bush03.png"
     texBush04 <- makeTexture "texture/bush04.png"
+    texBush05 <- makeTexture "texture/bush05.png"
     openSans <- createTextureFont "fonts/OpenSans-Regular.ttf"
 
     setFontFaceSize openSans 24 72
 
-    let bush = Bush
-          { entity = Entity
-            { angle = 0
-            , position = Vector2 0 0
-            , velocity = Vector2 5 5
-            , model = Model
-              { points = [Vector2 0 0, Vector2 256 0, Vector2 256 256, Vector2 0 256]
-              , Game.Model.texture = texBush04
-              }
-            }
-          , visualCover = 0.5
-          }
-        bush2 = Bush
-          { entity = Entity
-            { angle = 0
-            , position = Vector2 256 256
-            , velocity = Vector2 10 12
-            , model = Model
-              { points = [Vector2 0 0, Vector2 128 0, Vector2 128 128, Vector2 0 128]
-              , Game.Model.texture = texBush04
-              }
-            }
-          , visualCover = 0.75
-          }
+    let bushTextures = [texBush01, texBush02, texBush03, texBush04, texBush05]
+    let randomBushTex r = pure $ bushTextures !! floor (r * 5)
+    bushTex <- do (randomIO :: IO Float) >>= randomBushTex
+    bushTex2 <- do (randomIO :: IO Float) >>= randomBushTex
+
+    let bush = createBush (Vector2 0 0) bushTex
+        bush2 = createBush (Vector2 256 256) bushTex2
         env = Env
           { envEventsChan    = eventChannel
           , envWindow        = win
