@@ -13,11 +13,6 @@ data Entity = Entity {
   , position :: Vector2
 }
 
-updateEntity :: Float -> Entity -> Entity
-updateEntity deltaTime e = e
-    { position = vadd (position e) (vscale (velocity e) deltaTime)
-    }
-
 renderEntity :: Entity -> IO ()
 renderEntity e = do
     GL.activeTexture GL.$= GL.TextureUnit 0

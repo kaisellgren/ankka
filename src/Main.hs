@@ -5,6 +5,7 @@ import Engine.Event
 import Engine.Callbacks
 import Util.Vector2
 import Engine.Graphics
+import Game.Bush
 import Game.World
 import Game.Scene
 import Game.Entity
@@ -49,23 +50,29 @@ initialize eventChannel win = do
 
     setFontFaceSize openSans 24 72
 
-    let entity = Entity
-          { angle = 0
-          , position = Vector2 0 0
-          , velocity = Vector2 5 5
-          , model = Model
-            { points = [Vector2 0 0, Vector2 256 0, Vector2 256 256, Vector2 0 256]
-            , Game.Model.texture = texDirt
+    let bush = Bush
+          { entity = Entity
+            { angle = 0
+            , position = Vector2 0 0
+            , velocity = Vector2 5 5
+            , model = Model
+              { points = [Vector2 0 0, Vector2 256 0, Vector2 256 256, Vector2 0 256]
+              , Game.Model.texture = texBush04
+              }
             }
+          , visualCover = 0.5
           }
-        entity2 = Entity
-          { angle = 0
-          , position = Vector2 256 256
-          , velocity = Vector2 10 12
-          , model = Model
-            { points = [Vector2 0 0, Vector2 128 0, Vector2 128 128, Vector2 0 128]
-            , Game.Model.texture = texBush04
+        bush2 = Bush
+          { entity = Entity
+            { angle = 0
+            , position = Vector2 256 256
+            , velocity = Vector2 10 12
+            , model = Model
+              { points = [Vector2 0 0, Vector2 128 0, Vector2 128 128, Vector2 0 128]
+              , Game.Model.texture = texBush04
+              }
             }
+          , visualCover = 0.75
           }
         env = Env
           { envEventsChan    = eventChannel
@@ -79,7 +86,7 @@ initialize eventChannel win = do
           , prevTime             = 0
           , scene                = Scene
             { world = World
-              { entities = [entity, entity2]
+              { bushEntities = [bush, bush2]
               , width = 5120
               , height = 5120
               , Game.World.texture = texDirt
@@ -143,7 +150,7 @@ update = do
     modify $ \s -> s
       { scene = (scene s)
         { world = (world $ scene s)
-          { entities = fmap (updateEntity deltaTime) (entities $ world $ scene s)
+          { bushEntities = fmap (updateBush deltaTime) (bushEntities $ world $ scene s)
           }
         }
       }
@@ -222,7 +229,7 @@ draw = do
         GL.loadIdentity
         GL.translate $ vector3 $ vneg camPos
         renderTerrain $ world $ scene state
-        mapM_ renderEntity $ entities $ world $ scene state
+        mapM_ (renderEntity . entity) $ bushEntities $ world $ scene state
 
         GL.loadIdentity
         GL.translate $ vector3 $ Vector2 (fromIntegral (-w) / 2.0) (fromIntegral h / 2.0 - 24)
